@@ -9,6 +9,6 @@ class Book(models.Model):
 
 class Hero(models.Model):
     name = models.CharField(max_length=20)
-    gender = models.CharField(max_length=5, choices=(("meal", "男"), ("female", "女")))
+    gender = models.CharField(max_length=6, choices=(("male", "男"), ("female", "女")), default='male')
     content = models.CharField(max_length=100)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
