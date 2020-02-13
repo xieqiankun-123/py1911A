@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>详情页</title>
+</head>
+<body>
+    <h1>书名:{{book.title}}</h1>
+    <h1>价格:{{book.price}}</h1>
+    <h1>出版时间{{book.bpub_date}}</h1>
+    <h1>英雄:</h1>
+    <ul>
+        {% for hero in book.hero_set.all%}
+            <li>
+                {{hero.name}} -- {{hero.gender}} -- {{hero.content}}
+            </li>
+        {% endfor %}
+
+    </ul>
+    <div>
+        <a href="/booktest/index/">返回上一级</a>
+
+    </div>
+
+</body>
+</html>
