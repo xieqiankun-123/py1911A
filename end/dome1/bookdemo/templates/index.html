@@ -9,13 +9,25 @@
 <body>
 <div class="contener">
     <h1>这里是首页</h1>
-<!--    <h2>{{books}}</h2>-->
+    <!--    <h2>{{books}}</h2>-->
     <ul>
         {% for book in books %}
-        <li><a href="{% url 'booktest:detail' book.id %}">{{book.id}} -- {{book.title}} -- {{book.price}} -- {{book.bpub_date}}</a></li>
+        <li>
+            <a href="{% url 'booktest:detail' book.id %}">{{book.id}} -- {{book.title}} -- {{book.price}} --
+                {{book.bpub_date}}</a>
+            <a href="{% url 'booktest:editbook' book.id %}">编辑</a>
+            <a href="{% url 'booktest:deletebook' book.id %}">删除</a>
+
+        </li>
         {% endfor %}
     </ul>
+    <a href="{% url 'booktest:addbook' %}">追加书籍</a>
     <img src="/static/img/1.jpg" alt="">
+    <div>
+
+
+    </div>
+    <a href="{% url 'booktest:about' %}">返回挂怒页面</a>
 
 </div>
 
