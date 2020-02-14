@@ -12,7 +12,7 @@
 <!--    <h2>{{books}}</h2>-->
     <ul>
         {% for book in books %}
-        <li><a href="/booktest/detail/{{book.id}}/">{{book.id}} -- {{book.title}} -- {{book.price}} -- {{book.bpub_date}}</a></li>
+        <li><a href="{% url 'booktest:detail' book.id %}">{{book.id}} -- {{book.title}} -- {{book.price}} -- {{book.bpub_date}}</a></li>
         {% endfor %}
     </ul>
     <img src="/static/img/1.jpg" alt="">

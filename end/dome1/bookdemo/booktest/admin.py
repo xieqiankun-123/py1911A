@@ -9,7 +9,7 @@ class HeroInline(admin.StackedInline):
     extra = 1
 
 
-class BookAdmin(admin.ModelAdmin):
+class BookAdmin(ModelAdmin):
     list_display = ('id', 'title', 'price')
     search_fields = ['title', 'id']
     list_per_page = 5
@@ -17,7 +17,7 @@ class BookAdmin(admin.ModelAdmin):
     inlines = [HeroInline]
 
 
-class HeroAdmin(admin.ModelAdmin):
+class HeroAdmin(ModelAdmin):
     list_display = ('id', 'name', 'gender', 'content', 'book')
     search_fields = ['name', 'gender']
     list_filter = ('book', 'gender')
