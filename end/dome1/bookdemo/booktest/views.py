@@ -74,6 +74,7 @@ def addbook(request):
 
 def editbook(request, bookid):
     book = Book.objects.get(id=bookid)
+    book.bpub_date = str(book.bpub_date)
     print(book.bpub_date)
     if request.method == "GET":
         return render(request, "editbook.html", {"book": book})
