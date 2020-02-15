@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 # Register your models here.
-from .models import Book, Hero
+from .models import Book, Hero,User
 
 
 class HeroInline(admin.StackedInline):
@@ -25,3 +25,5 @@ class HeroAdmin(ModelAdmin):
 
 admin.site.register(Book, BookAdmin)
 admin.site.register(Hero, HeroAdmin)
+admin.site.register(User)
+
