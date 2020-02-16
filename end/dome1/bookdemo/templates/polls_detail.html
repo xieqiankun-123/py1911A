@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票详情页</title>
+</head>
+<body>
+<h1>投票详情页</h1>
+<h3>{{vote.title}}</h3>
+{% if options.count > 0 %}
+<form action="#" method="post">
+    <ul>
+        {% for option in options%}
+        <li>
+            <input type="radio" name="poll" value="{{option.id}}">
+            {{option.opt_title}}
+            {{option.opt_poll}}
+            <a href="{% url 'polls:polls_delete_option' option.id %}">删除</a>
+        </li>
+        {% endfor %}
+
+    </ul>
+    <input type="submit" value="提交">
+</form>
+{% else %}
+<div>
+    <h1>该投票暂无选项,请先去添加</h1>
+</div>
+{% endif %}
+<p><a href="{% url 'polls:polls_add_option' vote.id %}">增加选项</a></p>
+<p><a href="{% url 'polls:polls_index' %}">返回首页</a></p>
+
+
+</body>
+</html>
