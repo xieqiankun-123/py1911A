@@ -5,6 +5,14 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
+class User(AbstractUser):
+    """
+    自定义用户类
+
+    """
+    telephone = models.CharField(max_length=11,verbose_name="手机号")
+    votes = models.ManyToManyField('Vote')
+
 
 class Vote(models.Model):
     title = models.CharField(max_length=100, verbose_name="投票标题")
@@ -23,7 +31,6 @@ class Options(models.Model):
 
     class Meta:
         verbose_name = "选项表"
-
 
 # class User(AbstractUser):
 #     telephone = models.CharField(max_length=11,verbose_name="手机号码")

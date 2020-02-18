@@ -12,5 +12,8 @@ urlpatterns = [
     # url(r'^delete_vote/$', views.delete_vote, name='polls_delete_vote'),
     url(r'^$', views.IndexView.as_view(), name='polls_index'),
     url(r'^detail/(\d+)/$', views.DetailView.as_view(), name='polls_detail'),
-    url(r'^result/(\d+)$',views.ResultView.as_view(),name="polls_result")
+    url(r'^result/(\d+)$', views.ResultView.as_view(), name="polls_result"),
+    url(r'^login/$', views.login, name='login'),
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'rigist/', views.regist, name='regist'),
 ]

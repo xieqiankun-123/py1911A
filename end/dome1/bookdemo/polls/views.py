@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
-from .models import Options, Vote
-from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, DeleteView
+from .models import *
+from django.views.generic import View, TemplateView, CreateView, ListView, DetailView as DV, DeleteView
+from django.contrib.auth import login as lin, logout as lon, authenticate
 
 
 # Create your views here.
@@ -18,21 +19,42 @@ class IndexView(ListView):
 
 class DetailView(View):
     def get(self, resquste, voteid):
-        try:
-            vote = Vote.objects.get(id=voteid)
-            options = vote.options_set.all()
-            return render(resquste, 'polls/polls_detail.html', {"vote": vote, "options": options})
 
-        except:
-            return HttpResponse("问题不合法")
+        if resquste.user and resquste.user.username != "":
+            try:
+                vote = Vote.objects.get(id=voteid)
+
+                if vote in resquste.user.votes.all():
+
+                    url = reverse("polls:polls_result", args=(voteid,))
+                    print(vote, "++_")
+                    return redirect(to=url)
+                else:
+                    try:
+                        options = vote.options_set.all()
+                        return render(resquste, 'polls/polls_detail.html', {"vote": vote, "options": options})
+                    except:
+                        return HttpResponse("问题不合法")
+            except Exception as e:
+                print(e)
+                return HttpResponse("++")
+        else:
+            url = reverse("polls:login") + "?next=/polls/detail/" + voteid + "/"
+            return redirect(to=url)
 
     def post(self, requste, voteid):
-        option_id = requste.POST.get("poll")
-        option = Options.objects.get(id=option_id)
-        option.opt_poll += 1
-        option.save()
-        url = reverse("polls:polls_result", args=(voteid,))
-        return redirect(to=url)
+        try:
+            vote = Vote.objects.get(id=voteid)
+            requste.user.votes.add(vote)
+            option_id = requste.POST.get("poll")
+            option = Options.objects.get(id=option_id)
+            option.opt_poll += 1
+            option.save()
+            url = reverse("polls:polls_result", args=(voteid,))
+
+            return redirect(to=url)
+        except:
+            return HttpResponse("选项不合法")
 
 
 class ResultView(View):
@@ -71,6 +93,47 @@ def add_option(requste, voteid):
         option.save()
         url = reverse("polls:polls_detail", args=(voteid,))
         return redirect(to=url)
+
+
+def login(requste):
+    if requste.method == "GET":
+        return render(requste, 'polls/login.html')
+    elif requste.method == "POST":
+        username = requste.POST.get("username")
+        password = requste.POST.get("password")
+        user = authenticate(username=username, password=password)
+        if user:
+            lin(requste, user)
+            if requste.GET.get("next"):
+                url = requste.GET.get("next")
+            else:
+                url = reverse("polls:polls_index")
+            return redirect(to=url)
+        else:
+            url = reverse("polls:login")
+            return redirect(url)
+
+
+def logout(requste):
+    lon(requste)
+    url = reverse("polls:polls_index")
+    return redirect(to=url)
+
+
+def regist(requste):
+    if requste.method == "GET":
+        return render(requste, 'polls/regist.html')
+    elif requste.method == "POST":
+        username = requste.POST.get("username")
+        password1 = requste.POST.get("password1")
+        password2 = requste.POST.get("password2")
+        if User.objects.filter(username=username).count() > 0:
+            return HttpResponse("用户名已存在")
+        else:
+            if password1 == password2:
+                User.objects.create_user(username=username, password=password1)
+                url = reverse("polls:login")
+                return redirect(to=url)
 
 
 def add_vote(requste):
