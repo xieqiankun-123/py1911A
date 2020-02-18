@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="contener">
-    <h1>这里是首页</h1>
+    <h1>这里是首页 <a href="{% url 'polls:polls_index' %}">进入投票应用</a></h1>
     <!--    <h2>{{books}}</h2>-->
     <ul>
         {% for book in books %}

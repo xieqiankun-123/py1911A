@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票结果页</title>
+</head>
+<body>
+    <ul>
+        {% for option in options %}
+        <li>
+
+            {{option.opt_title}}
+            {{option.opt_poll}}
+        </li>
+        {% endfor %}
+
+    </ul>
+    <a href="{% url 'polls:polls_index' %}">返回首页</a>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends 'polls/base.html' %}
+
+{% block body %}
+    <h1>投票小程序</h1>
+    <ul>
+        {% for vote in votes %}
+            <li>
+                <a href="{% url 'polls:polls_detail' vote.id %}">{{vote.title}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'polls:polls_add_vote' %}">创建投票</a>
+
+{% endblock %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票小程序</title>
+</head>
+<body>
+    <h1>投票小程序</h1>
+    <ul>
+        {% for vote in votes %}
+            <li>
+                <a href="{% url 'polls:polls_detail' vote.id %}">{{vote.title}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="#">创建投票</a>
+
+
+</body>
+</html>

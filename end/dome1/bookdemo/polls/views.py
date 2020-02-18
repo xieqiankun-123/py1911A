@@ -1,12 +1,49 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from .models import Options, Vote
+from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, DeleteView
 
 
 # Create your views here.
 def index(requste):
     votes = Vote.objects.all()
     return render(requste, 'polls_index.html', {"votes": votes})
+
+
+class IndexView(ListView):
+    template_name = 'polls/polls_index.html'
+    context_object_name = 'votes'
+    queryset = Vote.objects.all()
+
+
+class DetailView(View):
+    def get(self, resquste, voteid):
+        try:
+            vote = Vote.objects.get(id=voteid)
+            options = vote.options_set.all()
+            return render(resquste, 'polls/polls_detail.html', {"vote": vote, "options": options})
+
+        except:
+            return HttpResponse("问题不合法")
+
+    def post(self, requste, voteid):
+        option_id = requste.POST.get("poll")
+        option = Options.objects.get(id=option_id)
+        option.opt_poll += 1
+        option.save()
+        url = reverse("polls:polls_result", args=(voteid,))
+        return redirect(to=url)
+
+
+class ResultView(View):
+    def get(self, resquste, voteid):
+        try:
+            vote = Vote.objects.get(id=voteid)
+            options = vote.options_set.all()
+            return render(resquste, 'polls/polls_result.html', {"vote": vote, "options": options})
+
+        except:
+            return HttpResponse("问题不合法")
 
 
 def detail(requste, voteid):

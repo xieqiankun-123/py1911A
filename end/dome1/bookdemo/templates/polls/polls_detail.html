@@ -14,8 +14,6 @@
         <li>
             <input type="radio" name="poll" value="{{option.id}}">
             {{option.opt_title}}
-            {{option.opt_poll}}
-            <a href="{% url 'polls:polls_delete_option' option.id %}">删除</a>
         </li>
         {% endfor %}
 
