@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import *
 from django.views.generic import View, TemplateView, CreateView, ListView, DetailView as DV, DeleteView
 from django.contrib.auth import login as lin, logout as lon, authenticate
+from .forms import *
 
 
 # Create your views here.
@@ -97,21 +98,28 @@ def add_option(requste, voteid):
 
 def login(requste):
     if requste.method == "GET":
-        return render(requste, 'polls/login.html')
+        lf = LoginForm()
+        return render(requste, 'polls/login.html', {"lf": lf})
+        # return render(requste, 'polls/login.html')
     elif requste.method == "POST":
-        username = requste.POST.get("username")
-        password = requste.POST.get("password")
-        user = authenticate(username=username, password=password)
-        if user:
-            lin(requste, user)
-            if requste.GET.get("next"):
-                url = requste.GET.get("next")
+        lf = LoginForm(requste.POST)
+        if lf.is_valid():
+            username = lf.cleaned_data.get("username")
+            password = lf.cleaned_data.get("password")
+            # username = requste.POST.get("username")
+            # password = requste.POST.get("password")
+            user = authenticate(username=username, password=password)
+            if user:
+                lin(requste, user)
+                if requste.GET.get("next"):
+                    url = requste.GET.get("next")
+                else:
+                    url = reverse("polls:polls_index")
+                return redirect(to=url)
             else:
-                url = reverse("polls:polls_index")
-            return redirect(to=url)
+                return render(requste, 'polls/login.html', {"lf": lf, "errors": "用户名密码不匹配"})
         else:
-            url = reverse("polls:login")
-            return redirect(url)
+            return HttpResponse("未知错误")
 
 
 def logout(requste):
@@ -122,18 +130,29 @@ def logout(requste):
 
 def regist(requste):
     if requste.method == "GET":
-        return render(requste, 'polls/regist.html')
+        rf = RegistForm()
+        return render(requste, 'polls/regist.html', {"rf": rf})
     elif requste.method == "POST":
-        username = requste.POST.get("username")
-        password1 = requste.POST.get("password1")
-        password2 = requste.POST.get("password2")
-        if User.objects.filter(username=username).count() > 0:
-            return HttpResponse("用户名已存在")
+        rf = RegistForm(requste.POST)
+        if rf.is_valid():
+            username = rf.cleaned_data.get("username")
+            password1 = rf.cleaned_data.get("password")
+            password2 = rf.cleaned_data.get("password2")
+
+            # username = requste.POST.get("username")
+            # password1 = requste.POST.get("password1")
+            # password2 = requste.POST.get("password2")
+            if User.objects.filter(username=username).count() > 0:
+                return render(requste, 'polls/regist.html', {"errors": "用户名已存在"})
+            else:
+                if password1 == password2:
+                    User.objects.create_user(username=username, password=password1)
+                    url = reverse("polls:login")
+                    return redirect(to=url)
+                else:
+                    return render(requste, 'polls/regist.html', {"rf": rf, "errors": "两次密码不一致"})
         else:
-            if password1 == password2:
-                User.objects.create_user(username=username, password=password1)
-                url = reverse("polls:login")
-                return redirect(to=url)
+            return HttpResponse("未知错误")
 
 
 def add_vote(requste):

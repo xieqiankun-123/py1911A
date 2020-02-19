@@ -1,18 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>登陆界面</title>
-</head>
-<body>
+{% extends 'polls/base.html' %}
+{% block body %}
+
+{% comment %}
     <form action="#" method="post">
-        用户名: <input type="text" name="username"> <br>
-        密码: <input type="password" name="password"> <br>
+        {% csrf_token %}
+        用户名: <input type="text" name="username" required> <br>
+        密码: <input type="password" name="password" required> <br>
         <input type="submit" value="登陆">
-
-
-
+        {{errors}}
     </form>
-
-</body>
-</html>
+{% endcomment %}
+    <form action="#" method="post">
+        {% csrf_token %}
+        {{lf.username.label}}{{lf.username}}<br>
+        {{lf.username.help_text}}<br>
+        {{lf.password.label}}{{lf.password}}<br>
+        {{lf.password.help_text}}<br>
+        <input type="submit" value="登陆"><br>
+        {{errors}}
+    </form>
+{% endblock %}

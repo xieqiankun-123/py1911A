@@ -2,15 +2,29 @@
 {% block header %}
 {% endblock %}
 {% block body %}
+{% comment %}
 <form action="#" method="post">
-    用户名: <input type="text" name="username" placeholder="请输入用户名">
+    {% csrf_token %}
+    用户名: <input type="text" name="username" placeholder="请输入用户名" required>
     <br>
-    密码: <input type="password" name="password1" placeholder="请输入密码">
+    密码: <input type="password" name="password1" placeholder="请输入密码" required>
     <br>
-    重复密码: <input type="password" name="password2" placeholder="请输入重复密码">
+    重复密码: <input type="password" name="password2" placeholder="请输入重复密码" required>
     <br>
     <input type="submit" value="注册">
+</form>
+{% endcomment %}
 
+<form action="#" method="post">
+    {% csrf_token %}
+    {{rf.username.label}} : {{rf.username}}<br>
+    {{rf.username.help_text}}<br>
+    {{rf.password.label}} : {{rf.password}}<br>
+    {{rf.password.help_text}}<br>
+    {{rf.password2.label}} : {{rf.password2}}<br>
+    {{rf.password2.help_text}}<br>
+    {{errors}}<br>
+    <input type="submit" value="注册"><br>
 
 </form>
 
