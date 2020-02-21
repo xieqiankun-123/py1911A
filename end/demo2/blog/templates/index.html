@@ -81,17 +81,17 @@
     <div class="pagination col-md-11">
         <ul>
             {% if page.has_previous %}
-            <li class="col-md-2"><a href="?pagenum={{page.previous_page_number}}">上一页</a></li>
+            <li class="col-md-2"><a href="?pagenum={{page.previous_page_number}}&type={{type}}&year={{year}}&month={{month}}">上一页</a></li>
             {% endif %}
             {% for pn in page.paginator.page_range %}
             {% if pn == page.number %}
-            <li class="current col-md-1"><a href="?pagenum={{pn}}">{{pn}}</a></li>
+            <li class="current col-md-1"><a href="?pagenum={{pn}}&type={{type}}&year={{year}}&month={{month}}">{{pn}}</a></li>
             {% else %}
-            <li class="col-md-1"><a href="?pagenum={{pn}}">{{pn}}</a></li>
+            <li class="col-md-1"><a href="?pagenum={{pn}}&type={{type}}&year={{year}}&month={{month}}">{{pn}}</a></li>
             {% endif %}
             {% endfor %}
             {% if page.has_next %}
-            <li class="col-md-2"><a href="?pagenum={{page.next_page_number}}">下一页</a></li>
+            <li class="col-md-2"><a href="?pagenum={{page.next_page_number}}&type={{type}}&year={{year}}&month={{month}}">下一页</a></li>
             {% endif %}
         </ul>
     </div>

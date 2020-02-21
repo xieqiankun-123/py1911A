@@ -25,10 +25,16 @@ def favicon(request):
 
 def index(request):
     ads = Ads.objects.all()
-    article = Article.objects.all()
+    typepage = request.GET.get("type")
+    year = request.GET.get("year")
+    month = request.GET.get("month")
+    if typepage == "date":
+        article = Article.objects.filter(create_time__year=year, create_time__month=month)
+    else:
+        article = Article.objects.all()
     paginator = Paginator(article, 2)
     page = paginator.get_page(request.GET.get("pagenum", 1))
-    return render(request, 'index.html', {"ads": ads, "page": page})
+    return render(request, 'index.html', {"ads": ads, "page": page, "type": typepage, "year": year, "month": month})
 
 
 def detail(request, article_id):

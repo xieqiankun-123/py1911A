@@ -16,16 +16,13 @@
         </div>
         <div class="widget widget-archives">
             <h3 class="widget-title">归档</h3>
+            {% get_dates_list as dates_list %}
             <ul>
-                <li>
-                    <a href="#">2017 年 5 月</a>
-                </li>
-                <li>
-                    <a href="#">2017 年 4 月</a>
-                </li>
-                <li>
-                    <a href="#">2017 年 3 月</a>
-                </li>
+                {% for date in dates_list %}
+                    <li>
+                        <a href="?type=date&year={{date.year}}&month={{date.month}}">{{date.year}}年{{date.month}}月</a>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
 
