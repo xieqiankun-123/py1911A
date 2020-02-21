@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
+{% load myfun %}
 {% block aside %}
     <aside class="col-md-4">
         <div class="widget widget-recent-posts">
             <h3 class="widget-title">最新文章</h3>
+            {% get_article_list 4 as article_list %}
             <ul>
-                <li>
-                    <a href="#">Django 博客开发入门教程：前言</a>
-                </li>
-                <li>
-                    <a href="#">Django 博客使用 Markdown 自动生成文章目录</a>
-                </li>
-                <li>
-                    <a href="#">部署 Django 博客</a>
-                </li>
+                {% for article in article_list %}
+                    <li>
+                        <a href="{% url 'blogapp:detail' article.id %}">{{article.title}}</a>
+                    </li>
+                {% endfor %}
+
             </ul>
         </div>
         <div class="widget widget-archives">
