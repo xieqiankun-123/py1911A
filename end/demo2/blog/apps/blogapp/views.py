@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 
 # Create your views here.
 from django.http import HttpResponse
 from .models import *
 
 from django.core.paginator import Paginator, Page
+from .forms import *
 
 
 # 一个Page中有  object_list代表当前页的所有对象
@@ -50,16 +51,33 @@ def index(request):
         article = Article.objects.all()
     paginator = Paginator(article, 2)
     page = paginator.get_page(request.GET.get("pagenum", 1))
-    return render(request, 'index.html',locals())
+    return render(request, 'index.html', locals())
 
 
 def detail(request, article_id):
-    try:
-        article = Article.objects.get(id=article_id)
-        return render(request, 'single.html', locals())
-    except Exception as e:
-        print(e)
-        return HttpResponse("没有这篇文章")
+    if request.method == "GET":
+        try:
+            cf = CommentForm()
+            article = Article.objects.get(id=article_id)
+            return render(request, 'single.html', locals())
+        except Exception as e:
+            print(e)
+            return HttpResponse("没有这篇文章")
+    elif request.method == "POST":
+        try:
+            cf = CommentForm(request.POST)
+            comment = cf.save(False)
+            article = Article.objects.get(id=article_id)
+            print(comment, "+++++")
+            comment.article = article
+            comment.save()
+            url = reverse("blogapp:detail", args=(article_id,))
+            return redirect(to=url)
+        except Exception as e:
+            print(e)
+            return HttpResponse("没有这篇文章")
+
+
 
 
 def contact(request):
