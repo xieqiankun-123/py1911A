@@ -1,5 +1,5 @@
 from django.template import Library
-from ..models import Article
+from ..models import Article, Category, Tag
 
 register = Library()
 
@@ -23,3 +23,13 @@ def get_article_list(num=3):
 def get_dates_list(num=3):
     dates = Article.objects.dates("create_time", "month")[:num]
     return dates
+
+
+@register.simple_tag
+def get_category_list(num=3):
+    return Category.objects.all()[:num]
+
+
+@register.simple_tag
+def get_tags():
+    return Tag.objects.all()
