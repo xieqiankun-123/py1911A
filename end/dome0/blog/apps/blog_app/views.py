@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect,reverse
 from django.http import HttpResponse
 from .models import *
 from django.core.paginator import Paginator, Page
+from .forms import CommentForm
 
 
 # Create your views here.
@@ -42,7 +43,25 @@ def index(request):
 
 
 def detail(request, article_id):
-    return render(request, 'single.html')
+    if request.method == "GET":
+        try:
+            cf = CommentForm()
+            article = Article.objects.get(id=article_id)
+            return render(request, 'single.html', locals())
+        except:
+            return HttpResponse("文章不存在")
+    elif request.method == "POST":
+        try:
+            article = Article.objects.get(id=article_id)
+            cf = CommentForm(request.POST)
+            comment = cf.save(False)
+            print(comment)
+            comment.article = article
+            comment.save()
+            url = reverse("blog_app:detail",args=(article_id,))
+            return redirect(to=url)
+        except:
+            return HttpResponse("文章不存在")
 
 
 def contact(request):
