@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load myfun %}
+{% block aside %}
+<aside class="col-md-4">
+    <div class="widget widget-recent-posts">
+        <h3 class="widget-title">最新文章</h3>
+        {% get_article_list as articles %}
+        <ul>
+            {% for article in articles %}
+            <li>
+                <a href="{% url 'blog_app:detail' article.id %}">{{article.title}}</a>
+            </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+    <div class="widget widget-archives">
+        <h3 class="widget-title">归档</h3>
+        {% get_article_dates as dates %}
+        <ul>
+            {% for date in dates %}
+            <li>
+                <a href="/?type_page=date&year={{date.year}}&month={{date.month}}">{{date|date:"Y年m月"}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="widget widget-category">
+        {% get_category_list as category_list %}
+        <h3 class="widget-title">分类</h3>
+        <ul>
+            {% for c in category_list %}
+            <li>
+                <a href="/?type_page=category&category_id={{c.id}}">{{c.name}} <span class="post-count">({{c.article_set.count}})</span></a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="widget widget-tag-cloud">
+        {% get_tag_list as tags %}
+        <h3 class="widget-title">标签云</h3>
+        <ul>
+            {% for tag in tags %}
+            <li>
+                <a href="/?type_page=tag&tag_id={{tag.id}}">{{tag.name}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="rss">
+        <a href="{% url 'blog_app:rss' %}"><span class="ion-social-rss-outline"></span> RSS 订阅</a>
+    </div>
+</aside>
+{% endblock %}
