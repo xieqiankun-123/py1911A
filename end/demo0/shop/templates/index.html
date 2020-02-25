@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}
+首页
+{% endblock %}
+{% block slider %}
+<div class="slider-wrapper theme-orman">
+    <div class="ribbon"></div>
+    <div id="slider" class="nivoSlider">
+        {% for a in ads %}
+        <img src="/media/{{a.img}}" alt="slider image 1"/>
+        {% endfor %}
+    </div>
+    <div id="htmlcaption" class="nivo-html-caption">
+        <strong>Example</strong> caption with <a href="#">a credit link</a> for <em>this slider</em>.
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.nivo.slider.pack.js"></script>
+<script type="text/javascript">
+        $(window).load(function() {
+            $('#slider').nivoSlider({
+				controlNav:false
+			});
+        });
+
+
+
+</script>
+{% endblock %}
+{% block right %}
+<h2>Welcome to Floral Shop</h2>
+<p>Floral Shop is a free template provided Collect from <a href="http://www.cssmoban.com">网页模板</a>. Sed in suscipit
+    risus, eget consectetur justo. Praesent lacinia, nisi quis commodo consectetur, diam magna laoreet felis, a pulvinar
+    mauris enim in felis. Phasellus in mauris velit. In pellentesque massa in nisl auctor pellentesque. Donec fermentum
+    convallis purus, id luctus nulla tempus in. Aliquam diam nibh, consectetur quis fringilla facilisis, egestas sed
+    odio. Validate <a href="#"><strong>XHTML</strong></a> &amp; <a href="#"><strong>CSS</strong></a>.</p>
+
+{% for good in goods %}
+{% if forloop.counter|divisibleby:4 %}
+<div class="product_box no_margin_right">
+    <a href="{% url 'shop_app:detail' good.id %}"><img src="/media/{{good.img}}" alt="flowers 4"/></a>
+    <h3>{{good.name}}</h3>
+    <p class="product_price">${{good.price}}</p>
+    <p class="add_to_cart">
+        <a href="{% url 'shop_app:detail' good.id %}">Detail</a>
+        <a href="{% url 'shop_app:shop_cart' %}">Add to Cart</a>
+    </p>
+</div>
+{% else %}
+<div class="product_box">
+    <a href="{% url 'shop_app:detail' good.id %}"><img src="/media/{{good.img}}" alt="floral set 1"/></a>
+    <h3>{{good.name}}</h3>
+    <p class="product_price">${{good.price}}</p>
+    <p class="add_to_cart">
+        <a href="{% url 'shop_app:detail' good.id %}">Detail</a>
+        <a href="shoppingcart.html">Add to Cart</a>
+    </p>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}

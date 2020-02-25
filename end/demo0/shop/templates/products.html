@@ -1,0 +1,44 @@
+{% extends 'base1.html' %}
+{% block title %}
+商品列表页
+{% endblock %}
+{% block right %}
+<div id="content" class="right">
+    <h2>Products</h2>
+    <p>Cras aliquam, mi nec imperdiet volutpat, ligula est consequat odio, eu auctor urna augue eu quam. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit. Duis bibendum nec nunc ac hendrerit. Morbi lacinia placerat diam
+        sit amet fringilla. Integer accumsan suscipit suscipit. Mauris non nunc sit amet turpis pharetra mattis.
+        Validate <a href="#"><strong>XHTML</strong></a> &amp; <a href="#"><strong>CSS</strong></a>.</p>
+    {% for good in page.object_list %}
+    {% if forloop.counter|divisibleby:4 %}
+    <div class="product_box no_margin_right">
+        <a href="{% url 'shop_app:detail' good.id %}"><img src="/media/{{good.img}}" alt="flowers 4"/></a>
+        <h3>{{good.name}}</h3>
+        <p class="product_price">${{good.price}}</p>
+        <p class="add_to_cart">
+            <a href="{% url 'shop_app:detail' good.id %}">Detail</a>
+            <a href="shoppingcart.html">Add to Cart</a>
+        </p>
+    </div>
+    {% else %}
+    <div class="product_box">
+        <a href="{% url 'shop_app:detail' good.id %}"><img src="/media/{{good.img}}" alt="flowers 4"/></a>
+        <h3>{{good.name}}</h3>
+        <p class="product_price">${{good.price}}</p>
+        <p class="add_to_cart">
+            <a href="{% url 'shop_app:detail' good.id %}">Detail</a>
+            <a href="shoppingcart.html">Add to Cart</a>
+        </p>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+<div class="blank_box">
+    {% if page.has_previous %}
+    <a href="?pagenum={{page.previous_page_number}}" class="button left">Previous</a>
+    {% endif %}
+    {% if page.has_next %}
+    <a href="?pagenum={{page.next_page_number}}" class="button right">Next Page</a>
+    {% endif %}
+</div>
+{% endblock %}

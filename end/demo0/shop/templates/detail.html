@@ -1,0 +1,39 @@
+{% extends 'base1.html' %}
+{% block title %}
+详情页
+{% endblock %}
+{% block right %}
+<h2>{{good.name}}</h2>
+<div class="content_half left">
+    <a rel="lightbox" href="/media/{{good.img}}"><img src="/media/{{good.img}}" alt="yellow flowers"/></a>
+</div>
+<div class="content_half right">
+    <table>
+        <tr>
+            <td width="130">Price:</td>
+            <td width="84">${{good.price}}</td>
+        </tr>
+        <tr>
+            <td>Availability:</td>
+            <td><strong>In Stock</strong></td>
+        </tr>
+        <tr>
+            <td>Quantity</td>
+            <td><input type="text" value="1" size="6" maxlength="2"/></td>
+        </tr>
+    </table>
+    <div class="cleaner h20"></div>
+    <a href="shoppingcart.html" class="button">Add to Cart</a>
+</div>
+<div class="cleaner h40"></div>
+
+<h4>Product Description</h4>
+<p>Sed ullamcorper nunc at magna egestas fermentum. Etiam turpis orci, condimentum luctus orci id, elementum vulputate
+    nunc. Donec diam turpis, iaculis vitae feugiat ac, molestie at odio. Nullam tincidunt est ac sagittis ultricies.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur semper quam sit amet turpis rhoncus id venenatis
+    tellus sollicitudin. Fusce ullamcorper, dolor non mollis pulvinar, turpis tortor commodo nisl, et semper lectus
+    augue blandit tellus. Quisque id bibendum libero. Validate <a href="#"><strong>XHTML</strong></a> &amp; <a href="#"><strong>CSS</strong></a>.
+</p>
+<div class="cleaner"></div>
+
+{% endblock %}
