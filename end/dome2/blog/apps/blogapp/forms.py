@@ -14,5 +14,4 @@ class CommentForm(forms.ModelForm):
         }
         widgets = {
             "body": forms.Textarea
-
         }

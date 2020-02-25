@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, "extra_apps"))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-m3ny7ey7&+qps)gtx=2ece4o#ty&^9dokurotp0&r(-h8t^az'
+SECRET_KEY = 'rdpigyu)v47b5cc8mm^v^1igtfex$57d-ca!u1a^70az4n)x+y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blogapp',
     'DjangoUeditor',
-
+    'haystack',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +124,14 @@ X_FRAME_OPTIONS = 'sameorigin'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIAFILES_DIRS = [os.path.join(BASE_DIR, 'media')]
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'blogapp.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

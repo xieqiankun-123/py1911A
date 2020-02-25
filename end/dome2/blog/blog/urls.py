@@ -18,11 +18,11 @@ from django.urls import path, include
 from django.conf.urls import url
 from .settings import MEDIA_ROOT
 from django.views.static import serve
-import blogapp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
+    url(r'^search/', include('haystack.urls')),
 
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
     path('', include('blogapp.urls', namespace='blogapp')),
