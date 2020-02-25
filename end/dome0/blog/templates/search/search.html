@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索结果页面</title>
+</head>
+<body>
+
+{% if query %}
+<h3>搜索结果如下：</h3>
+{% for result in page.object_list %}
+<a href="{% url 'blog_app:detail' result.object.id %}"> {{result.object.title}} </a><br/>
+{% empty %}
+<p>啥也没找到</p>
+{% endfor %}
+{% endif %}
+
+
+</body>
+</html>
