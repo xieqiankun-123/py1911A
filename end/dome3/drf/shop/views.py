@@ -22,3 +22,8 @@ class GoodViewSets(viewsets.ModelViewSet):
     """
     queryset = Good.objects.all()
     serializer_class = GoodSerializer
+
+
+class GoodImagesViewSets(viewsets.ModelViewSet):
+    queryset = GoodImages.objects.all()
+    serializer_class = GoodImageSerializer

@@ -17,13 +17,20 @@ from django.contrib import admin
 from django.urls import path, include
 from shop.views import *
 from rest_framework import routers
+from rest_framework.documentation import include_docs_urls
+from .settings import MEDIA_ROOT
+from django.conf.urls import url
+from django.views.static import serve
 
 router = routers.DefaultRouter()
 router.register("categorys", CategoryViewSets)
 router.register("goods", GoodViewSets)
+router.register("goodimgs", GoodImagesViewSets)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url('media/(?P<path>.*)', serve, {'document_root': MEDIA_ROOT}),
+    path('api/v1/docs/', include_docs_urls(title="RestFulAPI", description="RestFulAPI|v1")),
     path('api/v1/', include(router.urls)),
     path('', include('rest_framework.urls')),
 ]
