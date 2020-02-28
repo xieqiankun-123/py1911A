@@ -33,6 +33,8 @@ urlpatterns = [
     url('media/(?P<path>.*)', serve, {'document_root': MEDIA_ROOT}),
     url(r'^categorylist/$', category_list, name="category_list"),
     url(r'^categorydetail/(\d+)/$', category_detail, name="category_detail"),
+    url(r'^goodlist/$', good_list, name="good_list"),
+    url(r'^gooddetail/(\d+)/$', good_detail, name="good_detail"),
 
     path('api/v1/docs/', include_docs_urls(title="RestFulAPI", description="RestFulAPI|v1")),
     path('api/v1/', include(router.urls)),
