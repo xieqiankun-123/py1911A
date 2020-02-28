@@ -16,7 +16,7 @@ class CategoryViewSets(viewsets.ModelViewSet):
     serializer_class = CategorySerializer 知名模型的序列化类
     """
     queryset = Category.objects.all()
-    serializer_class = CategorySerizlizer
+    serializer_class = CategorySerializer
 
 
 class GoodViewSets(viewsets.ModelViewSet):
@@ -37,7 +37,7 @@ class GoodImagesViewSets(viewsets.ModelViewSet):
 
 class CategoryListView2(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Category.objects.all()
-    serializer_class = CategorySerizlizer
+    serializer_class = CategorySerializer
 
     def get(self, request):
         return self.list(request)
@@ -49,7 +49,7 @@ class CategoryListView2(generics.GenericAPIView, mixins.ListModelMixin, mixins.C
 class CategoryDetailView2(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                           mixins.DestroyModelMixin):
     queryset = Category.objects.all()
-    serializer_class = CategorySerizlizer
+    serializer_class = CategorySerializer
 
     def get(self, request, pk):
         return self.retrieve(request, pk)
@@ -66,11 +66,11 @@ class CategoryDetailView2(generics.GenericAPIView, mixins.RetrieveModelMixin, mi
 
 class CategoryListView1(APIView):
     def get(self, request):
-        seria = CategorySerizlizer(instance=Category.objects.all(), many=True)
+        seria = CategorySerializer(instance=Category.objects.all(), many=True)
         return Response(data=seria.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        seria = CategorySerizlizer(data=request.data)
+        seria = CategorySerializer(data=request.data)
         seria.is_valid(raise_exception=True)
         seria.save()
         return Response(data=seria.data, status=status.HTTP_201_CREATED)
@@ -78,17 +78,17 @@ class CategoryListView1(APIView):
 
 class CategoryDetailView1(APIView):
     def get(self, request, c_id):
-        seria = CategorySerizlizer(instance=get_object_or_404(Category, pk=c_id))
+        seria = CategorySerializer(instance=get_object_or_404(Category, pk=c_id))
         return Response(data=seria.data, status=status.HTTP_200_OK)
 
     def put(self, request, c_id):
-        seria = CategorySerizlizer(instance=get_object_or_404(Category, pk=c_id), data=request.data)
+        seria = CategorySerializer(instance=get_object_or_404(Category, pk=c_id), data=request.data)
         seria.is_valid(raise_exception=True)
         seria.save()
         return Response(data=seria.data, status=status.HTTP_200_OK)
 
     def patch(self, request, c_id):
-        seria = CategorySerizlizer(instance=get_object_or_404(Category, pk=c_id), data=request.data)
+        seria = CategorySerializer(instance=get_object_or_404(Category, pk=c_id), data=request.data)
         seria.is_valid(raise_exception=True)
         seria.save()
         return Response(data=seria.data, status=status.HTTP_200_OK)
@@ -100,12 +100,12 @@ class CategoryDetailView1(APIView):
 
 class CategoryListView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
-    serializer_class = CategorySerizlizer
+    serializer_class = CategorySerializer
 
 
 class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
-    serializer_class = CategorySerizlizer
+    serializer_class = CategorySerializer
 
 
 # class GoodListView(generics.ListCreateAPIView):
@@ -121,10 +121,10 @@ class GoodViewSets1(viewsets.ModelViewSet):
 def category_list(request):
     if request.method == "GET":
         model = Category.objects.all()
-        seria = CategorySerizlizer(instance=model, many=True)
+        seria = CategorySerializer(instance=model, many=True)
         return Response(data=seria.data, status=status.HTTP_200_OK)
     elif request.method == "POST":
-        seria = CategorySerizlizer(data=request.data)
+        seria = CategorySerializer(data=request.data)
         if seria.is_valid():
             seria.save()
             return Response(data=seria.data, status=status.HTTP_200_OK)
@@ -136,10 +136,10 @@ def category_list(request):
 def category_detail(request, c_id):
     model = get_object_or_404(Category, pk=c_id)
     if request.method == "GET":
-        seria = CategorySerizlizer(instance=model)
+        seria = CategorySerializer(instance=model)
         return Response(data=seria.data, status=status.HTTP_200_OK)
     elif request.method == "PUT" or request.method == "PATCH":
-        seria = CategorySerizlizer(instance=model, data=request.data)
+        seria = CategorySerializer(instance=model, data=request.data)
         if seria.is_valid():
             seria.save()
             return Response(data=seria.data, status=status.HTTP_200_OK)

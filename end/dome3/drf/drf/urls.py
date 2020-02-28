@@ -55,3 +55,4 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
     path('', include('rest_framework.urls')),
 ]
+

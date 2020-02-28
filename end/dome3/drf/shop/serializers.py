@@ -15,7 +15,7 @@ class CumentSerializer(serializers.RelatedField):
         return value.name + "+++++"
 
 
-class CategorySerizlizer(serializers.Serializer):
+class CategorySerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
     name = serializers.CharField(max_length=10, min_length=1, error_messages={
         "max_length": "最多10个字",
@@ -127,7 +127,7 @@ class GoodSerializer(serializers.Serializer):
         "max_length": "最多20个字",
         "min_length": "最少2个字"
     })
-    category = CategorySerizlizer(label="分类")
+    category = CategorySerializer(label="分类")
     imgs = GoodImageSerializer(label="图片", many=True, read_only=True)
 
     def validate_category(self, category):
