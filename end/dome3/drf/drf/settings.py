@@ -120,6 +120,8 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
 }
 
+AUTH_USER_MODEL = "shop.user"
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIAFILES_DIRS = [os.path.join(BASE_DIR, 'media')]

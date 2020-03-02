@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 from .serializers import *
 from django.http import HttpResponse, JsonResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 
 
@@ -17,6 +17,13 @@ class CategoryViewSets(viewsets.ModelViewSet):
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+    @action(methods=["GET"], detail=False)
+    def getlactscategory(self, request):
+        num = int(request.query_params.get("num", 0))
+        print(num)
+        seria = CategorySerializer(instance=Category.objects.all()[:num], many=True)
+        return Response(data=seria.data, status=status.HTTP_200_OK)
 
 
 class GoodViewSets(viewsets.ModelViewSet):
@@ -74,6 +81,18 @@ class CategoryListView1(APIView):
         seria.is_valid(raise_exception=True)
         seria.save()
         return Response(data=seria.data, status=status.HTTP_201_CREATED)
+
+
+# class GoodListView1(APIView):
+#     def get(self, request):
+#         seria = GoodSerializer(instance=Good.objects.all(), many=True)
+#         return Response(data=seria.data, status=status.HTTP_200_OK)
+#
+#     def post(self, request):
+#         seria = GoodSerializer(data=request.data)
+#         seria.is_valid(raise_exception=True)
+#         seria.save()
+#         return Response(data=seria.data, status=status.HTTP_201_CREATED)
 
 
 class CategoryDetailView1(APIView):
@@ -151,6 +170,7 @@ def category_detail(request, c_id):
     else:
         return HttpResponse("当前路由不允许")
 
+
 # @api_view(["GET", "POST"])
 # def good_list(request):
 #     if request.method == "GET":
@@ -175,3 +195,14 @@ def category_detail(request, c_id):
 #         return HttpResponse("修改数据成功")
 #     elif request.method == "DELETE":
 #         return HttpResponse("删除数据成功")
+
+class UserViewSets(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    @action(methods=["POST"], detail=False)
+    def regist(self, request):
+        seria = UserRegistSerializer(data=request.data)
+        seria.is_valid(raise_exception=True)
+        seria.save()
+        return Response("注册成功", status=status.HTTP_200_OK)

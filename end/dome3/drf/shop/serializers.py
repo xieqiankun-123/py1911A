@@ -136,7 +136,6 @@ class GoodSerializer(serializers.Serializer):
         :param category:  处理的原始值
         :return: 返回新值
         """
-        print("category原始值为", category)
         try:
             Category.objects.get(name=category["name"])
         except:
@@ -156,7 +155,6 @@ class GoodSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        print("创建good参数", validated_data)
         instance = Good.objects.create(**validated_data)  # name=    category=
         return instance
 
@@ -165,4 +163,29 @@ class GoodSerializer(serializers.Serializer):
         instance.name = validated_data.get("name", instance.name)
         instance.category = validated_data.get("category", instance.category)
         instance.save()
+        return instance
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
+class UserRegistSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=20, min_length=6, error_messages={
+        "max_length": "用户名最长为20位",
+        "min_length": "用户名最短为6位"
+    })
+    password = serializers.CharField()
+    password2 = serializers.CharField()
+
+    def validate(self, attrs):
+        if attrs["password"] != attrs["password2"]:
+            raise serializers.ValidationError("密码不一致")
+        del attrs["password2"]
+        return attrs
+
+    def create(self, validated_data):
+        instance = User.objects.create_user(**validated_data)
         return instance
