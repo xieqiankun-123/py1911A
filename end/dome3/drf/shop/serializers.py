@@ -15,6 +15,12 @@ class CumentSerializer(serializers.RelatedField):
         return value.name + "+++++"
 
 
+class GoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Good
+        fields = ["id", "name", "category"]
+
+
 class CategorySerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)
     name = serializers.CharField(max_length=10, min_length=1, error_messages={
@@ -22,7 +28,7 @@ class CategorySerializer(serializers.Serializer):
         "min_length": "最少1个字",
 
     })
-    goods = serializers.StringRelatedField(many=True, read_only=True)
+    goods = GoodSerializer(many=True, read_only=True)
 
     def create(self, validated_data):
         print("重写创建方法", validated_data)
@@ -122,7 +128,7 @@ class GoodImageSerializer(serializers.Serializer):
 #         instance.save()
 #         return instance
 
-class GoodSerializer(serializers.Serializer):
+class GoodSerializer1(serializers.Serializer):
     name = serializers.CharField(max_length=20, min_length=2, error_messages={
         "max_length": "最多20个字",
         "min_length": "最少2个字"
@@ -130,28 +136,25 @@ class GoodSerializer(serializers.Serializer):
     category = CategorySerializer(label="分类")
     imgs = GoodImageSerializer(label="图片", many=True, read_only=True)
 
-    def validate_category(self, category):
-        """
-        处理category
-        :param category:  处理的原始值
-        :return: 返回新值
-        """
-        try:
-            Category.objects.get(name=category["name"])
-        except:
-            raise serializers.ValidationError("输入的分类名不存在")
-
-        return category
+    # def validate_category(self, category):
+    #     """
+    #     处理category
+    #     :param category:  处理的原始值
+    #     :return: 返回新值
+    #     """
+    #     try:
+    #         Category.objects.get(name=category["name"])
+    #     except:
+    #         raise serializers.ValidationError("输入的分类名不存在")
+    #
+    #     return category
 
     def validate(self, attrs):
-        print("收到的数据为", attrs)
         try:
             c = Category.objects.get(name=attrs["category"]["name"])
         except:
             c = Category.objects.create(name=attrs["category"]["name"])
         attrs["category"] = c
-        print("更改之后的数据", attrs)
-
         return attrs
 
     def create(self, validated_data):
@@ -171,21 +174,44 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = "__all__"
 
+    def validate(self, attrs):
+        if attrs.get("password"):
+            from django.contrib.auth import hashers
+            attrs["password"] = hashers.make_password(attrs["password"])
+        return attrs
+
 
 class UserRegistSerializer(serializers.Serializer):
+    """
+    定义注册用户的序列化类
+    """
+
     username = serializers.CharField(max_length=20, min_length=6, error_messages={
         "max_length": "用户名最长为20位",
         "min_length": "用户名最短为6位"
     })
-    password = serializers.CharField()
-    password2 = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
+        """
+        重写validate方法 对数据进行处理
+        :param attrs:
+        :return:
+        """
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError("密码不一致")
-        del attrs["password2"]
+        # del attrs["password2"]
         return attrs
 
     def create(self, validated_data):
-        instance = User.objects.create_user(**validated_data)
+        # print("+++++", validated_data["username"])
+        instance = User.objects.create_user(username=validated_data["username"],
+                                            password=validated_data["password"])
         return instance
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = "__all__"

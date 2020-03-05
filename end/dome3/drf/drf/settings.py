@@ -37,9 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop',
     'rest_framework',
+    'rest_framework_jwt',
+    'rest_framework_simplejwt',
+    'django_filters',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,10 +123,44 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     # Schema
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 采用session认证
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 采用basic认证
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 使用jwt认证
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+
+        # 使用rest_framework_simplejwt认证
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '30000/minutes',
+        'anon': '10000/minutes',
+    },
+
+    # 定义分页
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 3,
+    # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 AUTH_USER_MODEL = "shop.user"
 
+AUTHENTICATION_BACKENDS = ('shop.authbackend.MyLoginBackend',)
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIAFILES_DIRS = [os.path.join(BASE_DIR, 'media')]
+
+# 允许跨域
+CORS_ORIGIN_ALLOW_ALL = True

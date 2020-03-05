@@ -22,12 +22,17 @@ from .settings import MEDIA_ROOT
 from django.conf.urls import url
 from django.views.static import serve
 from shop.views import *
+# 添加jwt路由
+from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_simplejwt.views import token_obtain_pair,token_refresh
 
 router = routers.DefaultRouter()
 router.register("categorys", CategoryViewSets)
 router.register("goods", GoodViewSets)
 router.register("goodimgs", GoodImagesViewSets)
 router.register('users', UserViewSets)
+router.register('orders', OrderViewSets)
+# router.register('obtain_jwt_token', obtain_jwt_token)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -54,8 +59,10 @@ urlpatterns = [
     url(r'^goodlist/$', GoodViewSets1.as_view({'get': 'list', 'post': 'create'})),
     url(r'^gooddetail/(?P<pk>\d+)/$',
         GoodViewSets1.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'update', 'delete': 'destroy'})),
-
+    url('obtain_token/', token_obtain_pair, name="obtain_token"),
+    url('refresh/', token_refresh, name="refresh"),
     path('api/v1/docs/', include_docs_urls(title="RestFulAPI", description="RestFulAPI|v1u")),
     path('api/v1/', include(router.urls)),
+    # path('obj', include(obtain_jwt_token.urls)),
     path('', include('rest_framework.urls')),
 ]

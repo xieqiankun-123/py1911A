@@ -1,14 +1,21 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, generics, mixins
+from rest_framework import viewsets, status, generics, mixins, filters
 from rest_framework.views import APIView
 
 from .serializers import *
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
+# from rest_framework import permissions
+from .permissions import *
+# from rest_framework.throttling import *
+from .throttling import MyAnon, MyUser
+from .pagination import *
+
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-class CategoryViewSets(viewsets.ModelViewSet):
+class CategoryViewSets2(viewsets.ModelViewSet):
     """
     分类视图
     继承 ModelViewSet 就可以拥有 HTTPS 协议的动词属性来了
@@ -24,6 +31,49 @@ class CategoryViewSets(viewsets.ModelViewSet):
         print(num)
         seria = CategorySerializer(instance=Category.objects.all()[:num], many=True)
         return Response(data=seria.data, status=status.HTTP_200_OK)
+
+
+class CategoryViewSets(viewsets.ModelViewSet):
+    """
+    分类视图
+    继承 ModelViewSet 就可以拥有 HTTPS 协议的动词属性来了
+    queryset = Category.objects.all()  指明操作的模型列表
+    serializer_class = CategorySerializer 知名模型的序列化类
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    # permission_classes = [permissions.IsAdminUser]
+
+    def get_permissions(self):
+        if self.action == "create" or self.action == "update" or self.action == "partial_update" or self.action == "destroy":
+            return [permissions.IsAdminUser()]
+        else:
+            return []
+
+    # 使用自定义的频次限制类
+    throttle_classes = [MyAnon, MyUser]
+    # 使用自定义的分类器类
+    # pagination_class = MyPageNumberPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ["name"]
+    search_fields = ["name"]
+    ordering_fields = ["id"]
+
+
+class OrderViewSets(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+    # permission_classes = [permissions.IsAuthenticated]
+    def get_permissions(self):
+
+        if self.action == "partial_update" or self.action == "update" or self.action == "retrieve" or self.action == "destroy":
+            return [OrderPermissions()]
+        elif self.action == "create":
+            return [permissions.IsAuthenticated()]
+        else:
+            return [permissions.IsAdminUser()]
 
 
 class GoodViewSets(viewsets.ModelViewSet):
@@ -196,7 +246,8 @@ def category_detail(request, c_id):
 #     elif request.method == "DELETE":
 #         return HttpResponse("删除数据成功")
 
-class UserViewSets(viewsets.ModelViewSet):
+class UserViewSets1(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -206,3 +257,20 @@ class UserViewSets(viewsets.ModelViewSet):
         seria.is_valid(raise_exception=True)
         seria.save()
         return Response("注册成功", status=status.HTTP_200_OK)
+
+
+class UserViewSets(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin):
+    """
+    定义用户视图类
+    """
+    queryset = User.objects.all()
+
+    # serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        print("请求的方法为:", self.action)
+        if self.action == "create":
+            return UserRegistSerializer
+        else:
+            return UserSerializer
