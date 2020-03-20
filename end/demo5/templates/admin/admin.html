@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+Admin 管理员界面
+{% endblock %}
+
+{% block main %}
+
+<ul>
+    {% for category in categorys %}
+    <li> <h4>{{category.name}}</h4></li>
+    <ul>
+        {% for book in category.books %}
+        <li><p>{{book.name}}<a href="/admin/Book/delete/{{book.id}}">删除</a></p></li>
+<!--        /admin/Book/add-->
+        {% endfor %}
+        <li><a href="/admin/Book/add">添加书籍</a></li>
+    </ul>
+    {% endfor %}
+    <li><a href="/admin/Category/add">添加分类</a></li>
+</ul>
+
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}
+首页
+{% endblock %}
+
+{% block main %}
+<table class="table">
+    <a href="/login" class="btn btn-default">登录</a>
+    <tr>
+        <th colspan="2" style="text-align:center;">分类列表</th>
+    </tr>
+    <tr>
+        <th>分类编号</th>
+        <th>分类籍名</th>
+    </tr>
+    {% for category in categoryList %}
+    <tr>
+
+        <td>{{category.id}}</td>
+        <td><a href="/category/{{category.id}}">{{category.name}}</a></td>
+
+
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

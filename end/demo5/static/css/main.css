@@ -1,0 +1,12 @@
+.container{
+    width:1000px;
+    margin:20px auto;
+}
+.logo{
+    width:100px;
+    margin:auto;
+}
+.logo>img{
+    width:100%;
+    margin 0,auto;
+}
